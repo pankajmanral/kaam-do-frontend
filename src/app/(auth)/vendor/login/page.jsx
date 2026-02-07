@@ -31,7 +31,7 @@ export default function VendorLogin() {
                 })
             })       
             if(!response.ok){
-                throw new Error("Invalid Phone number or password")
+                throw new Error(response.error)
             }
             const result = await response.json()
             localStorage.setItem("token", result.data.token)
@@ -87,8 +87,8 @@ export default function VendorLogin() {
                     </div>
 
                     <div className="w-full flex justify-end">
-                        <Link href="/vendorRegister" className="text-xs text-black">
-                            Not a user ?
+                        <Link href="/vendor/register" className="text-xs text-black">
+                            Not a vendor ?
                         </Link>
                     </div>
 

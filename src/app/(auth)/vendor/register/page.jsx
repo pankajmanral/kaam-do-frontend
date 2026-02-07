@@ -3,11 +3,14 @@
 import TextField from "@/components/form-components/TextField";
 import PrimaryButton from "@/components/PrimaryButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export default function VendorRegister() {
 
     const { register, handleSubmit, formState: { errors } } = useForm({ mode: "onBlur" })
+
+    const router = useRouter()
 
     const onSubmit = async (data) => {
         try {
@@ -31,6 +34,7 @@ export default function VendorRegister() {
             if (!response.ok) {
                 throw new Error("Unable to post data")
             }
+            router.push("/vendor/login")
         } catch (error) {
             alert(error)
         }
@@ -209,8 +213,8 @@ export default function VendorRegister() {
                     </div>
 
                     <div className="w-full flex justify-end">
-                        <Link href="/vendorLogin" className="text-xs text-black">
-                            Already a user ?
+                        <Link href="/vendor/login" className="text-xs text-black">
+                            Already a vendor ?
                         </Link>
                     </div>
 

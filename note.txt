@@ -1,0 +1,1 @@
+automatically redirect to login page once the authentication token is expired

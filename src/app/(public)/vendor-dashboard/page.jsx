@@ -21,11 +21,14 @@ export default function VendorDashboard() {
                     }
                 })
 
+                const result = await response.json()
+
                 if (!response.ok) {
-                    throw new Error("Unable to load data")
+                    const errorMsg = result.error.toUpperCase();
+                    throw new Error(errorMsg)
                 }
 
-                const result = await response.json()
+                alert(result.message)
                 setJobs(result.data)
             } catch (error) {
                 alert(error)
@@ -48,7 +51,7 @@ export default function VendorDashboard() {
 
             <div className="pt-20">
                 <h1 className="text-2xl mb-10 text-black font-bold underline">
-                    View jobs
+                    View all jobs
                 </h1>
 
                 <table className="w-full border-collapse">
