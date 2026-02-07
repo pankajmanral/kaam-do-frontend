@@ -1,18 +1,23 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
 export default function VendorDashboard() {
 
     const [jobs, setJobs] = useState([])
     const [loading, setLoading] = useState(true)
+    const router = useRouter()
 
     useEffect(() => {
 
-        const getToken = localStorage.getItem("token")
-        // console.log(getToken)
-
         const getJobs = async () => {
+            
+            const getToken = localStorage.getItem("token")
+            if(!getToken){
+                router.push("/")
+            }
+
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/jobListing`, {
                     headers: {
@@ -28,7 +33,7 @@ export default function VendorDashboard() {
                     throw new Error(errorMsg)
                 }
 
-                alert(result.message)
+                // alert(result.message)
                 setJobs(result.data)
             } catch (error) {
                 alert(error)
@@ -50,7 +55,8 @@ export default function VendorDashboard() {
             }
 
             <div className="pt-20">
-                <h1 className="text-2xl mb-10 text-black font-bold underline">
+                <h1 className="font-bold text-xs bg-black text-white w-fit px-3 py-1 rounded-md">VENDOR DASHBOARD</h1>
+                <h1 className="text-xl mb-10 text-black text-center">
                     View all jobs
                 </h1>
 
@@ -70,20 +76,19 @@ export default function VendorDashboard() {
 
                     <tbody className="block md:table-row-group">
                         {!loading && jobs.length > 0 &&
-                            jobs.map((data, key) => (
-                                <tr
-                                    key={key}
+                            jobs.map((data, index) => (
+                                <tr key={index}
                                     className="block md:table-row border border-gray-200 rounded-lg md:rounded-none mb-6 md:mb-0 p-4 md:p-0 hover:bg-gray-50 transition"
                                 >
 
                                     <td className="flex md:table-cell justify-between py-2 md:px-4 md:py-3 text-sm">
                                         <span className="font-semibold md:hidden">SR.NO</span>
-                                        <span>{jobs.length}</span>
+                                        <span>{index + 1}</span>
                                     </td>
 
                                     <td className="flex md:table-cell justify-between py-2 md:px-4 md:py-3 text-sm">
                                         <span className="font-semibold md:hidden">POSTED BY</span>
-                                        <span>{data.postedBy}</span>
+                                        <span>{data.postedBy.toUpperCase()}</span>
                                     </td>
 
                                     <td className="flex md:table-cell justify-between py-2 md:px-4 md:py-3 text-sm">
@@ -100,7 +105,7 @@ export default function VendorDashboard() {
 
                                     <td className="flex md:table-cell justify-between py-2 md:px-4 md:py-3 text-sm">
                                         <span className="font-semibold md:hidden">LOCATION</span>
-                                        <span>{data.location}</span>
+                                        <span>{data.location.toUpperCase()}</span>
                                     </td>
 
                                     <td className="flex md:table-cell justify-between py-2 md:px-4 md:py-3 text-sm">

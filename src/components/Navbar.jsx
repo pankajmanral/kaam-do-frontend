@@ -1,11 +1,18 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
+import PrimaryButton from "./PrimaryButton"
 
 export default function Navbar() {
 
     const [isOpen, setIsOpen] = useState(false)
+    const router = useRouter()
+    const logout = () => {
+        localStorage.removeItem("token")
+        router.push("/")
+    }
 
     return (
         <>
@@ -17,9 +24,13 @@ export default function Navbar() {
                     <li className={"cursor-pointer"}>Pankaj</li>
                     <li className={"cursor-pointer"}>Pankaj</li>
                     <li className={"cursor-pointer"}>Pankaj</li>
-                    <button className="border border-white px-3 py-1">
+                    {/* <button className="border border-white px-3 py-1" onClick={() => logout()}>
                         Logout
-                    </button>
+                    </button> */}
+                    <PrimaryButton 
+                        buttonLabel={"Logout"}
+                        onClick= {() => logout()}
+                    />
                 </ul>
 
                 {/* Mobile Toggle Button */}
