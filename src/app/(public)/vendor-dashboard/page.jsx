@@ -1,4 +1,4 @@
-export default function Page(){
+export default function VendorDashboard(){
     return(
         <>
             <div className="mt-20">

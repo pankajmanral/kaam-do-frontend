@@ -5,11 +5,13 @@ import "./formInput.css";
 export default function TextField({
     type="text",
     maxLength,
+    minLength,
     label,
     error,
     register,
     name,
-    rules = {}
+    rules = {},
+    onChange
 }){
 
     return(
@@ -19,15 +21,17 @@ export default function TextField({
                 <input
                     tpye={type}
                     maxLength={maxLength}
+                    minLength={minLength}
                     {...register(name, rules)}
                     placeholder={label}
+                    onChange={onChange}
                 />
 
                 <label>
                     {label}
                 </label>
 
-                {error && <p>{error.message}</p>}
+                {error && <p className="error-msg">{error.message}</p>}
 
             </div>
         </>
