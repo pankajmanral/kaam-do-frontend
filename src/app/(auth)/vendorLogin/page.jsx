@@ -2,6 +2,7 @@
 
 import TextField from "@/components/form-components/TextField";
 import PrimaryButton from "@/components/PrimaryButton";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -30,7 +31,7 @@ export default function VendorLogin() {
                 })
             })       
             if(!response.ok){
-                throw new Error("Unable to find data")
+                throw new Error("Invalid Phone number or password")
             }
             router.push("/vendor-dashboard")
         } catch (error) {
@@ -41,7 +42,7 @@ export default function VendorLogin() {
     return (
         <>
             <div className={"pt-20 h-screen w-full flex flex-col justify-center items-center"}>
-                <h1 className={"text-2xl mb-14"}>Login page</h1>
+                <h1 className={"text-2xl mb-14 text-black font-bold underline"}>Login page</h1>
                 <form className={"w-full sm:max-w-80"} onSubmit={handleSubmit(onSubmit)}>
 
                     {/*Phone number*/}
@@ -63,6 +64,7 @@ export default function VendorLogin() {
 
                     {/*Password*/}
                     <TextField
+                        type="password"
                         label="Enter password"
                         minLength={8}
                         register={register}
@@ -77,11 +79,15 @@ export default function VendorLogin() {
                         error={errors.password}
                     />
 
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center mb-4">
                         <PrimaryButton buttonType="submit" buttonLabel="Submit" />
                     </div>
 
-                    <div id="recaptcha-container"></div>
+                    <div className="w-full flex justify-end">
+                        <Link href="/vendorRegister" className="text-xs text-black">
+                            Not a user ?
+                        </Link>
+                    </div>
 
                 </form>
             </div>

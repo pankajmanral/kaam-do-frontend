@@ -15,6 +15,7 @@ input {
     outline: none;
     position: relative;
     z-index: 1;
+    color: black;
 }
 
 ::placeholder {
@@ -27,8 +28,7 @@ label {
     top: 1rem;
     font-size: 12px;
     font-weight: 500;
-    /*color: rgba(22, 22, 22, 0.6);*/
-    color: red;
+    color: rgba(22, 22, 22, 0.6);
     pointer-events: none;
     transition: 0.2s ease all;
 }
@@ -37,8 +37,7 @@ input:focus + label,
 input:not(:placeholder-shown) + label {
     top: -6px;
     font-size: 12px;
-    /*color: #161616;*/
-    color: blue;
+    color: #161616;
 }
 
 .error-msg {

@@ -2,15 +2,16 @@
 
 import TextField from "@/components/form-components/TextField";
 import PrimaryButton from "@/components/PrimaryButton";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 export default function VendorRegister() {
 
     const { register, handleSubmit, formState: { errors } } = useForm({ mode: "onBlur" })
 
-    const onSubmit = async(data) => {
+    const onSubmit = async (data) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/vendorRegister`,{
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/vendorRegister`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -27,7 +28,7 @@ export default function VendorRegister() {
                     documentType: data.documentType
                 })
             })
-            if(!response.ok){
+            if (!response.ok) {
                 throw new Error("Unable to post data")
             }
         } catch (error) {
@@ -38,7 +39,7 @@ export default function VendorRegister() {
     return (
         <>
             <div className={"pt-20 h-full w-full flex flex-col justify-center items-center"}>
-                <h1 className={"text-2xl mb-14"}>Vendor register page</h1>
+                <h1 className={"text-2xl mb-14 text-black font-bold underline"}>Vendor register page</h1>
 
                 <form className={"w-full sm:max-w-[40rem]"} onSubmit={handleSubmit(onSubmit)}>
 
@@ -97,14 +98,14 @@ export default function VendorRegister() {
 
                         {/* vendor phone number */}
                         <TextField
-                            maxLength={10}
+                            maxLength={40}
                             label="Enter password"
                             name="password"
                             register={register}
                             rules={{
                                 required: "Password is required",
                                 minLength: {
-                                    value: "10",
+                                    value: "8",
                                     message: "Password should be atleast 8 characters long"
                                 }
                             }}
@@ -205,6 +206,12 @@ export default function VendorRegister() {
 
                     <div className="flex justify-center">
                         <PrimaryButton buttonLabel={"Register"} buttonType={"submit"} />
+                    </div>
+
+                    <div className="w-full flex justify-end">
+                        <Link href="/vendorLogin" className="text-xs text-black">
+                            Already a user ?
+                        </Link>
                     </div>
 
                 </form>
