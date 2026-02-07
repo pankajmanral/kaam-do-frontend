@@ -33,6 +33,9 @@ export default function VendorLogin() {
             if(!response.ok){
                 throw new Error("Invalid Phone number or password")
             }
+            const result = await response.json()
+            localStorage.setItem("token", result.data.token)
+            // console.log("TOKEN "+result.data.token)
             router.push("/vendor-dashboard")
         } catch (error) {
             alert(error)
