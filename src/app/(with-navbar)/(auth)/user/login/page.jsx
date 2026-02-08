@@ -45,7 +45,7 @@ export default function UserLogin() {
     return (
         <>
             <div className={"pt-20 h-screen w-full flex flex-col justify-center items-center"}>
-                <h1 className={"text-2xl mb-14 text-black font-bold underline"}>User Login page</h1>
+                <h1 className={"text-2xl mb-14 text-black font-thin"}><span className="font-bold underline">User</span> Register page</h1>
                 <form className={"w-full sm:max-w-80"} onSubmit={handleSubmit(onSubmit)}>
 
                     {/*Phone number*/}
@@ -86,7 +86,7 @@ export default function UserLogin() {
                         <PrimaryButton buttonType="submit" buttonLabel="Submit" />
                     </div>
 
-                    <div className="w-full flex justify-end">
+                    <div className="w-full flex justify-center">
                         <Link href="/user/register" className="text-xs text-black">
                             Not a user ?
                         </Link>

@@ -45,7 +45,7 @@ export default function VendorLogin() {
     return (
         <>
             <div className={"pt-20 h-screen w-full flex flex-col justify-center items-center"}>
-                <h1 className={"text-2xl mb-14 text-black font-bold underline"}>Login page</h1>
+                <h1 className={"text-2xl mb-14 text-black font-thin"}><span className="font-bold underline">Vendor</span> Login page</h1>
                 <form className={"w-full sm:max-w-80"} onSubmit={handleSubmit(onSubmit)}>
 
                     {/*Phone number*/}
@@ -86,7 +86,7 @@ export default function VendorLogin() {
                         <PrimaryButton buttonType="submit" buttonLabel="Submit" />
                     </div>
 
-                    <div className="w-full flex justify-end">
+                    <div className="w-full flex justify-center">
                         <Link href="/vendor/register" className="text-xs text-black">
                             Not a vendor ?
                         </Link>

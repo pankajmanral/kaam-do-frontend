@@ -40,7 +40,7 @@ export default function UserRegister() {
     return (
         <>
             <div className={"pt-20 h-full w-full flex flex-col justify-center items-center"}>
-                <h1 className={"text-2xl mb-14 text-black font-bold underline"}>Vendor register page</h1>
+                <h1 className={"text-2xl mb-14 text-black font-thin"}><span className="font-bold underline">User</span> Register page</h1>
 
                 <form className={"w-full sm:max-w-[40rem]"} onSubmit={handleSubmit(onSubmit)}>
 
@@ -151,11 +151,11 @@ export default function UserRegister() {
                         </div>
                     </div>
 
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mb-4">
                         <PrimaryButton buttonLabel={"Register"} buttonType={"submit"} />
                     </div>
 
-                    <div className="w-full flex justify-end">
+                    <div className="w-full flex justify-center">
                         <Link href="/user/login" className="text-xs text-black">
                             Already a user ?
                         </Link>
