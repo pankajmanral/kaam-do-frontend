@@ -2,37 +2,20 @@
 
 import Modal from "@/components/modal/Modal"
 import PrimaryButton from "@/components/PrimaryButton"
-import { useState, useEffect } from "react"
-import useFetchUserJobs from "@/hooks/useFetchUserJobs"
 import { useState } from "react"
+import useFetchUserJobs from "@/hooks/useFetchUserJobs"
+import useGetBids from "@/hooks/useGetBids"
 
 export default function UserDashboard() {
 
     // custom hook to load the posted jobs
     const { loading, jobs } = useFetchUserJobs()
 
-    const [openBidsModal, setOpenBidsModal] = useState(false)
+    // custom hook to load the bids for the job
     const [selectedJobId, setSelectedJobId] = useState(null)
+    const { bidData } = useGetBids(selectedJobId)
 
-    const getBids = async (jobId) => {
-        try {
-            const getToken = localStorage.getItem("token")
-            if (!getToken) {
-                alert("Invalid token")
-            }
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/jobs/${jobId}/bids`, {
-                headers: {
-                    "Authorization": `Bearer ${getToken}`,
-                    "Content-Type": "application/json"
-                }
-            })
-            const result = await response.json()
-            console.log(result)
-            setData(result)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const [openBidsModal, setOpenBidsModal] = useState(false)
 
     // function to post a new job
     const createJob = async () => {
@@ -55,27 +38,24 @@ export default function UserDashboard() {
             <Modal isOpen={openBidsModal} onClose={() => setOpenBidsModal(false)} >
                 <>
                     <h1 className="text-xl font-thin">View <span className="font-bold">BIDS</span> for {selectedJobId}</h1>
+                    <div>
+                        {bidData.length === 0 && 
+                            <p className="text-gray-500 text-center py-2">No bids received yet</p>
+                        }
+                        {bidData.length > 0 &&
+                            <div>
+                                {/* Render your bid items here */}
+                            </div>
+                        }
+                    </div>
                 </>
             </Modal>
 
             {/* modal to open the create job form */}
-            <Modal isOpen={createJobModal} onClose={() => setCreateJobModal(false)}>
+            <Modal>
                 <>
                     <h1>Create new job</h1>
-                    <form>
-                        <div className="form-row">
-
-                            <div className="form-group">
-                                <select>
-                                    {category.map((data)=>(
-                                        <option value>{data.name}</option>
-                                    ))}
-                                </select>
-                                <label>Select Category</label>
-                            </div>
-
-                        </div>
-                    </form>
+                    
                 </>
             </Modal>
 
@@ -160,7 +140,6 @@ export default function UserDashboard() {
                                         <button className="w-full md:w-auto border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition cursor-pointer"
                                             onClick={() => {
                                                 setOpenBidsModal(true);
-                                                getBids(data.id)
                                                 setSelectedJobId(data.id)
                                             }}>
                                             View Bids
@@ -168,6 +147,13 @@ export default function UserDashboard() {
                                     </td>
                                 </tr>
                             ))}
+                        {!loading && jobs.length === 0 &&
+                            <tr>
+                                <td colSpan="8" className="text-center py-8 text-gray-500">
+                                    No jobs posted yet. Create one to get started!
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>
