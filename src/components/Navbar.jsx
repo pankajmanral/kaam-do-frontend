@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import PrimaryButton from "./PrimaryButton"
 
 export default function Navbar() {
 
@@ -24,13 +23,9 @@ export default function Navbar() {
                     <li className={"cursor-pointer"}>Pankaj</li>
                     <li className={"cursor-pointer"}>Pankaj</li>
                     <li className={"cursor-pointer"}>Pankaj</li>
-                    {/* <button className="border border-white px-3 py-1" onClick={() => logout()}>
+                    <button className="border border-white px-3 py-1" onClick={() => logout()}>
                         Logout
-                    </button> */}
-                    <PrimaryButton 
-                        buttonLabel={"Logout"}
-                        onClick= {() => logout()}
-                    />
+                    </button>
                 </ul>
 
                 {/* Mobile Toggle Button */}
@@ -45,7 +40,7 @@ export default function Navbar() {
                     <li className={"cursor-pointer"}>Pankaj</li>
                     <li className={"cursor-pointer"}>Pankaj</li>
                     <li className={"cursor-pointer"}>Pankaj</li>
-                    <button className="border border-white px-3 py-1">
+                    <button className="border border-white px-3 py-1" onClick={() => logout()}>
                         Logout
                     </button>
                 </ul>

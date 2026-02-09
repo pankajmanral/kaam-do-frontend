@@ -1,6 +1,7 @@
 "use client"
 
 import Modal from "@/components/modal/Modal"
+import PrimaryButton from "@/components/PrimaryButton"
 import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 
@@ -11,25 +12,31 @@ export default function UserDashboard() {
     const [jobs, setJobs] = useState([])
     const [openBidsModal, setOpenBidsModal] = useState(false)
     const [selectedJobId, setSelectedJobId] = useState(null)
+    const [createJobModal, setCreateJobModal] = useState(false)
 
+    // states to save the jobItem data 
+    const [jobItemData, setJobItemData] = useState([])
+    const [category, setCategory] = useState([])
+    const [subCategory, setSubCategory] = useState([])
+
+    // useEffect function to get all the posted job
     useEffect(() => {
 
         const getData = async () => {
 
             const getToken = localStorage.getItem("token")
-            if(!getToken){
+            if (!getToken) {
                 router.push('/')
             }
 
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/viewJob`,{
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/viewJob`, {
                     headers: {
-                        "Authorization" : `Bearer ${getToken}`,
+                        "Authorization": `Bearer ${getToken}`,
                         "Content-Type": "application/json"
                     }
                 })
                 const result = await response.json()
-                console.log(result)
                 if (!response.ok) {
                     const errorMsg = result.error.toUpperCase()
                     throw new Error(errorMsg)
@@ -38,7 +45,7 @@ export default function UserDashboard() {
                 // alert("Jobs fetch successfully")
             } catch (error) {
                 console.log(error)
-            } finally{
+            } finally {
                 setLoading(false)
             }
         }
@@ -47,14 +54,41 @@ export default function UserDashboard() {
 
     }, [])
 
-    const getBids = async(jobId) => {
+
+    // function to get the dynamic category list
+    useEffect(() => {
+        const fetchJobCategory = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/job-item`)
+                const result = await response.json()
+
+                setJobItemData(result)
+
+                const categoryList = result.filter(
+                    item => item.kind === "Category"
+                )
+                console.log("Category List" + categoryList)
+                setCategory(categoryList)
+                
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        fetchJobCategory()
+
+    }, [])
+
+    // function to display bids on the posted job
+    const getBids = async (jobId) => {
         try {
 
             const getToken = localStorage.getItem("token")
-            if(!getToken){
+            if (!getToken) {
                 alert("Invalid token")
             }
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/jobs/${jobId}/bids`,{
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/jobs/${jobId}/bids`, {
                 headers: {
                     "Authorization": `Bearer ${getToken}`,
                     "Content-Type": "application/json"
@@ -67,12 +101,48 @@ export default function UserDashboard() {
         }
     }
 
+    // function to post a new job
+    const createJob = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/createJob`, {
+                method: "POST",
+                body: JSON.stringify({
+
+                })
+            })
+        } catch (error) {
+
+        }
+    }
+
     return (
         <>
 
-            <Modal isOpen={openBidsModal} onClose={()=>setOpenBidsModal(false)} >
+            {/* modal to open the bids section */}
+            <Modal isOpen={openBidsModal} onClose={() => setOpenBidsModal(false)} >
                 <>
                     <h1 className="text-xl font-thin">View <span className="font-bold">BIDS</span> for {selectedJobId}</h1>
+                </>
+            </Modal>
+
+            {/* modal to open the create job form */}
+            <Modal isOpen={createJobModal} onClose={() => setCreateJobModal(false)}>
+                <>
+                    <h1>Create new job</h1>
+                    <form>
+                        <div className="form-row">
+
+                            <div className="form-group">
+                                <select>
+                                    {category.map((data)=>(
+                                        <option value>{data.name}</option>
+                                    ))}
+                                </select>
+                                <label>Select Category</label>
+                            </div>
+
+                        </div>
+                    </form>
                 </>
             </Modal>
 
@@ -83,10 +153,16 @@ export default function UserDashboard() {
             }
 
             <div className="pt-20">
-                <h1 className="font-bold text-xs bg-black text-white w-fit px-3 py-1 mb-20 rounded-md">USER DASHBOARD</h1>
-                <h1 className="text-xl mb-10 text-black text-center">
-                    View all jobs
-                </h1>
+                <h1 className="font-bold text-xs bg-black text-white w-fit px-3 py-1 mb-4 rounded-md">USER DASHBOARD</h1>
+                <div className="flex flex-row flex-wrap justify-between items-center mb-4">
+                    <h1 className="text-xl text-black text-center">
+                        Posted Jobs
+                    </h1>
+                    <PrimaryButton
+                        buttonLabel={"+ Create new job"}
+                        onClick={() => setCreateJobModal(true)}
+                    />
+                </div>
 
                 <table className="w-full border-collapse">
                     {/* TABLE HEADER (Desktop only) */}
@@ -150,7 +226,7 @@ export default function UserDashboard() {
                                     <td className="mt-3 md:mt-0 md:table-cell md:px-4 md:py-3">
                                         <button className="w-full md:w-auto border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition cursor-pointer"
                                             onClick={() => {
-                                                setOpenBidsModal(true); 
+                                                setOpenBidsModal(true);
                                                 getBids(data.id)
                                                 setSelectedJobId(data.id)
                                             }}>
