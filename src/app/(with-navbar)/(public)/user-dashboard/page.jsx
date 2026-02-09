@@ -2,88 +2,20 @@
 
 import Modal from "@/components/modal/Modal"
 import PrimaryButton from "@/components/PrimaryButton"
-import { useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
+import useFetchUserJobs from "@/hooks/useFetchUserJobs"
+import { useState } from "react"
 
 export default function UserDashboard() {
 
-    const [loading, setLoading] = useState(true)
-    const router = useRouter()
-    const [jobs, setJobs] = useState([])
+    // custom hook to load the posted jobs
+    const { loading, jobs } = useFetchUserJobs()
+
     const [openBidsModal, setOpenBidsModal] = useState(false)
     const [selectedJobId, setSelectedJobId] = useState(null)
-    const [createJobModal, setCreateJobModal] = useState(false)
 
-    // states to save the jobItem data 
-    const [jobItemData, setJobItemData] = useState([])
-    const [category, setCategory] = useState([])
-    const [subCategory, setSubCategory] = useState([])
-
-    // useEffect function to get all the posted job
-    useEffect(() => {
-
-        const getData = async () => {
-
-            const getToken = localStorage.getItem("token")
-            if (!getToken) {
-                router.push('/')
-            }
-
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/viewJob`, {
-                    headers: {
-                        "Authorization": `Bearer ${getToken}`,
-                        "Content-Type": "application/json"
-                    }
-                })
-                const result = await response.json()
-                if (!response.ok) {
-                    const errorMsg = result.error.toUpperCase()
-                    throw new Error(errorMsg)
-                }
-                setJobs(result.data)
-                // alert("Jobs fetch successfully")
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        getData()
-
-    }, [])
-
-
-    // function to get the dynamic category list
-    useEffect(() => {
-        const fetchJobCategory = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/job-item`)
-                const result = await response.json()
-
-                setJobItemData(result)
-
-                const categoryList = result.filter(
-                    item => item.kind === "Category"
-                )
-                console.log("Category List" + categoryList)
-                setCategory(categoryList)
-                
-
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        fetchJobCategory()
-
-    }, [])
-
-    // function to display bids on the posted job
     const getBids = async (jobId) => {
         try {
-
             const getToken = localStorage.getItem("token")
             if (!getToken) {
                 alert("Invalid token")
@@ -96,6 +28,7 @@ export default function UserDashboard() {
             })
             const result = await response.json()
             console.log(result)
+            setData(result)
         } catch (error) {
             console.log(error)
         }
