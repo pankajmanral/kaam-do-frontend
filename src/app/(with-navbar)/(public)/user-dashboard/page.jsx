@@ -1,60 +1,24 @@
 "use client"
 
 import Modal from "@/components/modal/Modal"
-import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import useFetchUserJobs from "@/hooks/useFetchUserJobs"
+import { useState } from "react"
 
 export default function UserDashboard() {
 
-    const [loading, setLoading] = useState(true)
-    const router = useRouter()
-    const [jobs, setJobs] = useState([])
+    // custom hook to load the posted jobs
+    const { loading, jobs } = useFetchUserJobs()
+
     const [openBidsModal, setOpenBidsModal] = useState(false)
     const [selectedJobId, setSelectedJobId] = useState(null)
 
-    useEffect(() => {
-
-        const getData = async () => {
-
-            const getToken = localStorage.getItem("token")
-            if(!getToken){
-                router.push('/')
-            }
-
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/viewJob`,{
-                    headers: {
-                        "Authorization" : `Bearer ${getToken}`,
-                        "Content-Type": "application/json"
-                    }
-                })
-                const result = await response.json()
-                console.log(result)
-                if (!response.ok) {
-                    const errorMsg = result.error.toUpperCase()
-                    throw new Error(errorMsg)
-                }
-                setJobs(result.data)
-                // alert("Jobs fetch successfully")
-            } catch (error) {
-                console.log(error)
-            } finally{
-                setLoading(false)
-            }
-        }
-
-        getData()
-
-    }, [])
-
-    const getBids = async(jobId) => {
+    const getBids = async (jobId) => {
         try {
-
             const getToken = localStorage.getItem("token")
-            if(!getToken){
+            if (!getToken) {
                 alert("Invalid token")
             }
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/jobs/${jobId}/bids`,{
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/api/jobs/${jobId}/bids`, {
                 headers: {
                     "Authorization": `Bearer ${getToken}`,
                     "Content-Type": "application/json"
@@ -62,6 +26,7 @@ export default function UserDashboard() {
             })
             const result = await response.json()
             console.log(result)
+            setData(result)
         } catch (error) {
             console.log(error)
         }
@@ -70,7 +35,7 @@ export default function UserDashboard() {
     return (
         <>
 
-            <Modal isOpen={openBidsModal} onClose={()=>setOpenBidsModal(false)} >
+            <Modal isOpen={openBidsModal} onClose={() => setOpenBidsModal(false)} >
                 <>
                     <h1 className="text-xl font-thin">View <span className="font-bold">BIDS</span> for {selectedJobId}</h1>
                 </>
@@ -150,7 +115,7 @@ export default function UserDashboard() {
                                     <td className="mt-3 md:mt-0 md:table-cell md:px-4 md:py-3">
                                         <button className="w-full md:w-auto border border-black px-4 py-1.5 text-sm hover:bg-black hover:text-white transition cursor-pointer"
                                             onClick={() => {
-                                                setOpenBidsModal(true); 
+                                                setOpenBidsModal(true);
                                                 getBids(data.id)
                                                 setSelectedJobId(data.id)
                                             }}>
